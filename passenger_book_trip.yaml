@@ -1,0 +1,56 @@
+
+appId: com.miwayz.customer_app.qa
+---
+# Step 1: Launch passenger app
+- launchApp
+
+# Step 2: Wait for home screen
+- extendedWaitUntil:
+    visible: "Where to?"
+    timeout: 15000
+
+# Step 3: Open ride planning
+- tapOn: "Where to?"
+
+# Step 4: Verify ride planning screen
+- extendedWaitUntil:
+    visible: "Plan Your ride"
+    timeout: 10000
+
+# Step 5: Tap destination field
+- tapOn: "Where are you going?"
+
+# Step 6: Enter destination
+- inputText: "Pettah"
+
+# Step 7: Wait for suggestions
+- extendedWaitUntil:
+    visible: "Pettah CTB bus stand"
+    timeout: 10000
+
+# Step 8: Select destination
+- tapOn: "Pettah CTB bus stand"
+
+# Step 9: Wait for ride selection screen
+- extendedWaitUntil:
+    visible: "Choose your ride"
+    timeout: 20000
+
+# Step 10: Verify Mini is selected
+- assertVisible: "Confirm Mini"
+
+# Step 11: Confirm Mini
+- tapOn: "Confirm Mini"
+
+# Step 12: Wait for pickup confirmation
+- extendedWaitUntil:
+    visible: "Confirm pick-up"
+    timeout: 15000
+
+# Step 13: Confirm pickup
+- tapOn: "Confirm pick-up"
+
+# Step 14: Verify driver search
+- extendedWaitUntil:
+    visible: ".*Searching.*"
+    timeout: 20000
