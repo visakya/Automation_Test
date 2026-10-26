@@ -1,4 +1,4 @@
-appId: com.REPLACE_WITH_DRIVER_APP_ID
+appId: com.miwayz.driversapp.qa
 
 ---
 # MiWayz Driver - Full trip flow (STARTER TEMPLATE)
@@ -9,50 +9,78 @@ appId: com.REPLACE_WITH_DRIVER_APP_ID
 - waitForAnimationToEnd
 
 # Driver must be online before a passenger requests a trip.
-# If needed, add the actual Go Online steps here:
-# - tapOn: "Go Online"
+- runFlow:
+    when:
+      visible: "Go Online"
+    commands:
+      - tapOn: "Go Online"
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible: ".*(You're Online|Go Online).*"
+    timeout: 30000
 
 # Wait for an incoming trip request
 - extendedWaitUntil:
-    visible: ".*(New Trip|Trip Request|Accept).*"
+    visible: "Accept Ride"
     timeout: 180000
 
 # Accept request
-- tapOn: "Accept"
+- tapOn: "Accept Ride"
 - waitForAnimationToEnd
 
 # Navigation to pickup may open another app; adapt to your test environment.
 # - tapOn: "Navigate"
 
-# Enter the passenger's valid trip-start PIN
+# Start the trip by swiping the slider from left to right
 - extendedWaitUntil:
-    visible: ".*PIN.*"
+    visible: "Start Trip"
     timeout: 120000
-- tapOn: "PIN"
+- swipe:
+    start: 15%, 90%
+    end: 85%, 90%
+    duration: 500
+- waitForAnimationToEnd
+
+# Enter the passenger's ride-start PIN from the passenger app
+- extendedWaitUntil:
+    visible: "Ride Start PIN"
+    timeout: 120000
 - inputText: "1234"
-- tapOn: "Start Trip"
 - waitForAnimationToEnd
 
-# Verify trip has started
+# Verify the trip is active, then wait until the destination/drop-off state
+# is displayed. The driver must follow the route physically or through the
+# navigation system; Maestro cannot simulate vehicle movement or GPS.
 - extendedWaitUntil:
-    visible: ".*(In Trip|End Trip).*"
+    visible: ".*(In Trip|Dropping off).*"
     timeout: 30000
+- extendedWaitUntil:
+    visible: "Dropping off"
+    timeout: 1800000
 
-# Navigate to destination if needed
-# - tapOn: "Navigate"
-
-# End trip
-- tapOn: "End Trip"
+# End the ride only after reaching the drop-off location
+- extendedWaitUntil:
+    visible: "Slide to End ride"
+    timeout: 30000
+- swipe:
+    start: 15%, 90%
+    end: 85%, 90%
+    duration: 500
 - waitForAnimationToEnd
 
-# Fare collection depends on payment method and actual UI
+# Collect the cash fare after reaching the drop-off location
 - extendedWaitUntil:
-    visible: ".*(Fare|Collect Cash|Payment).*"
+    visible: "Collect Cash"
     timeout: 60000
-# Uncomment the correct action for the test payment method:
-# - tapOn: "Collect Cash"
-# - tapOn: "Confirm Payment"
+- swipe:
+    start: 15%, 90%
+    end: 85%, 90%
+    duration: 500
+- waitForAnimationToEnd
 
-# Rate passenger actions depend on actual UI labels:
-# - tapOn: "5"
-# - tapOn: "Submit"
+# Submit the passenger rating.
+- extendedWaitUntil:
+    visible: "Rate Rider"
+    timeout: 30000
+- tapOn: "Rate Rider"
+- waitForAnimationToEnd
