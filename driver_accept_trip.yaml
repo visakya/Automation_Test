@@ -1,0 +1,58 @@
+appId: com.REPLACE_WITH_DRIVER_APP_ID
+
+---
+# MiWayz Driver - Full trip flow (STARTER TEMPLATE)
+# Start this flow first so the driver is ready to receive the passenger booking.
+# Replace app ID, test PIN, and selectors with actual QA app values.
+
+- launchApp
+- waitForAnimationToEnd
+
+# Driver must be online before a passenger requests a trip.
+# If needed, add the actual Go Online steps here:
+# - tapOn: "Go Online"
+
+# Wait for an incoming trip request
+- extendedWaitUntil:
+    visible: ".*(New Trip|Trip Request|Accept).*"
+    timeout: 180000
+
+# Accept request
+- tapOn: "Accept"
+- waitForAnimationToEnd
+
+# Navigation to pickup may open another app; adapt to your test environment.
+# - tapOn: "Navigate"
+
+# Enter the passenger's valid trip-start PIN
+- extendedWaitUntil:
+    visible: ".*PIN.*"
+    timeout: 120000
+- tapOn: "PIN"
+- inputText: "1234"
+- tapOn: "Start Trip"
+- waitForAnimationToEnd
+
+# Verify trip has started
+- extendedWaitUntil:
+    visible: ".*(In Trip|End Trip).*"
+    timeout: 30000
+
+# Navigate to destination if needed
+# - tapOn: "Navigate"
+
+# End trip
+- tapOn: "End Trip"
+- waitForAnimationToEnd
+
+# Fare collection depends on payment method and actual UI
+- extendedWaitUntil:
+    visible: ".*(Fare|Collect Cash|Payment).*"
+    timeout: 60000
+# Uncomment the correct action for the test payment method:
+# - tapOn: "Collect Cash"
+# - tapOn: "Confirm Payment"
+
+# Rate passenger actions depend on actual UI labels:
+# - tapOn: "5"
+# - tapOn: "Submit"
