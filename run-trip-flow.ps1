@@ -10,9 +10,14 @@ $driverPackage = "com.miwayz.driversapp.qa"
 $passengerPackage = "com.miwayz.customer_app.qa"
 $projectPath = "C:\Users\KasuniPiyumanthi\Desktop\Automation_Test"
 
-# The passenger books from the current location to the drop-off set in
-# passenger_book_trip.yaml; only the driver phone's location is simulated.
+# The passenger's pickup and drop-off are set in passenger_book_trip.yaml;
+# only the driver phone's location is simulated.
 $driveSpeedKmh = 120
+# Where the driver waits for the ride request (Majestic City, Bambalapitiya).
+# Set $driverStartName to "" to use the driver phone's real position instead.
+$driverStartName = "Majestic City, Bambalapitiya"
+$driverStartLat = 6.8939786
+$driverStartLng = 79.8546803
 # Real position of the driver phone, used to reset it after the run.
 # Read from the driver app at start-up; these values are only a fallback.
 $homeLat = 6.8814
@@ -102,6 +107,23 @@ function Start-DriveProcess([string]$name, [string]$routeJson) {
     return Start-Process powershell.exe -ArgumentList "-NoProfile", "-Command", $command -NoNewWindow -PassThru
 }
 
+# Keeps the driver phone parked at one position in a separate process until
+# it is stopped.
+function Start-HoldProcess([double]$lat, [double]$lng) {
+    $inv = [Globalization.CultureInfo]::InvariantCulture
+    $command = ". '$projectPath\mock-location.ps1'; " +
+        "Hold-MockLocation '$driverDevice' $($lat.ToString($inv)) $($lng.ToString($inv))"
+    return Start-Process powershell.exe -ArgumentList "-NoProfile", "-Command", $command -NoNewWindow -PassThru
+}
+
+# Stops a Maestro run that is still going (e.g. after another step failed),
+# including the Maestro/Java processes it started.
+function Stop-MaestroFlow($process) {
+    if ($process -and -not $process.HasExited) {
+        taskkill /T /F /PID $process.Id 2>$null | Out-Null
+    }
+}
+
 function Stop-DriveProcess($process) {
     if ($process -and -not $process.HasExited) {
         $process.Kill()
@@ -149,6 +171,27 @@ try {
         }
     }
 
+    if ($driverStartName -and -not $ResumeAtPickup) {
+        Invoke-Step "Place the driver at $driverStartName" {
+            Enable-MockLocation $driverDevice
+            $script:driveProcess = Start-HoldProcess $driverStartLat $driverStartLng
+            # Wait until the driver app reports the new position, so the ride
+            # is dispatched to the driver from there.
+            adb -s $driverDevice logcat -c | Out-Null
+            $seen = $null
+            $deadline = (Get-Date).AddSeconds(60)
+            do {
+                Start-Sleep -Seconds 3
+                $seen = Get-DriverAppLocation $driverDevice $driverPackage
+            } until (((Get-Date) -gt $deadline) -or
+                ($seen -and (Get-Distance $seen[0] $seen[1] $driverStartLat $driverStartLng) -lt 100))
+            if (-not $seen -or (Get-Distance $seen[0] $seen[1] $driverStartLat $driverStartLng) -ge 100) {
+                throw "The driver app did not report the $driverStartName position within 60 s."
+            }
+            Write-Info ("driver app reports {0}" -f (Format-LatLng $seen[0] $seen[1]))
+        }
+    }
+
     if ($ResumeAtPickup) {
         # Continue a trip that is already accepted and waiting at the pickup.
         $script:driverProcess = Start-MaestroFlow $driverDevice ".\driver_start_trip.yaml" "driver"
@@ -181,10 +224,17 @@ try {
     }
 
     Invoke-Step "Start driving to the pickup (on the road)" {
-        $driverStart = Get-DriverAppLocation $driverDevice $driverPackage
-        if (-not $driverStart) { throw "Could not read the driver's current location from the driver app log." }
+        if ($driverStartName -and -not $ResumeAtPickup) {
+            # Start exactly where the driver has been parked
+            $driverStart = @($driverStartLat, $driverStartLng)
+        }
+        else {
+            $driverStart = Get-DriverAppLocation $driverDevice $driverPackage
+            if (-not $driverStart) { throw "Could not read the driver's current location from the driver app log." }
+        }
         $route = Get-RoadRoute $driverStart[0] $driverStart[1] $script:stops.PickupLat $script:stops.PickupLng
         Enable-MockLocation $driverDevice
+        Stop-DriveProcess $script:driveProcess
         $script:driveProcess = Start-DriveProcess "route-to-pickup" $route
     }
 
@@ -235,6 +285,7 @@ finally {
     # Always give the driver phone its real location back, even after a failure.
     try {
         Invoke-Step "Reset the driver's location" {
+            Stop-MaestroFlow $script:driverProcess
             Stop-DriveProcess $script:driveProcess
             Reset-MockLocation $driverDevice $script:homeLat $script:homeLng $driverPackage
         }

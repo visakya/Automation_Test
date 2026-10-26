@@ -1,0 +1,109 @@
+﻿**********************
+Windows PowerShell transcript start
+Start time: 20261026174707
+Username: AzureAD\KasuniPiyumanthi
+RunAs User: AzureAD\KasuniPiyumanthi
+Configuration Name: 
+Machine: HP (Microsoft Windows NT 10.0.26200.0)
+Host Application: powershell -NoProfile -ExecutionPolicy Bypass -File C:\Users\KasuniPiyumanthi\Desktop\Automation_Test\run-trip-flow.ps1
+Process ID: 15036
+PSVersion: 5.1.26100.9711
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.26100.9711
+BuildVersion: 10.0.26100.9711
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+
+[17:47:07] START  Check both phones are connected
+           driver 9b01005930533036340013b959553c, passenger R9RYA03Y3WP
+[17:47:07] PASS   Check both phones are connected (0s)
+
+[17:47:07] START  Restart both apps
+adb.exe : args: [-p, com.miwayz.driversapp.qa, 1]
+At C:\Users\KasuniPiyumanthi\Desktop\Automation_Test\mock-location.ps1:10 char:5
++     & adb.exe @args 2>$null
++     ~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (args: [-p, com.miwayz.driversapp.qa, 1]:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ arg: "-p"
+ arg: "com.miwayz.driversapp.qa"
+ arg: "1"
+data="com.miwayz.driversapp.qa"
+adb.exe : args: [-p, com.miwayz.customer_app.qa, 1]
+At C:\Users\KasuniPiyumanthi\Desktop\Automation_Test\mock-location.ps1:10 char:5
++     & adb.exe @args 2>$null
++     ~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (args: [-p, com....omer_app.qa, 1]:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ arg: "-p"
+ arg: "com.miwayz.customer_app.qa"
+ arg: "1"
+data="com.miwayz.customer_app.qa"
+[17:47:09] PASS   Restart both apps (3s)
+
+[17:47:09] START  Record the driver's real position
+           home position 6.8813009,79.8568295
+[17:47:19] PASS   Record the driver's real position (10s)
+
+[17:47:19] START  Place the driver at Majestic City, Bambalapitiya
+           driver app reports 6.8939786,79.8546803
+[17:47:29] PASS   Place the driver at Majestic City, Bambalapitiya (10s)
+
+[17:47:39] START  Passenger books the ride
+[17:49:02] PASS   Passenger books the ride (82s)
+
+[17:49:02] START  Driver accepts the ride
+           pickup 6.8815207,79.8567452, drop-off 6.9351176,79.8543603
+[17:49:14] PASS   Driver accepts the ride (13s)
+
+[17:49:14] START  Start driving to the pickup (on the road)
+Road route: 2425 m, 55 points
+[17:49:15] PASS   Start driving to the pickup (on the road) (1s)
+
+[17:49:15] START  Read the ride PIN from the passenger phone
+           PIN 2618
+[17:50:34] PASS   Read the ride PIN from the passenger phone (79s)
+
+[17:50:34] START  Driver reaches the pickup and opens the PIN screen
+[17:50:38] PASS   Driver reaches the pickup and opens the PIN screen (4s)
+
+[17:50:38] START  Start driving to the drop-off (on the road)
+Road route: 7829 m, 353 points
+[17:50:39] PASS   Start driving to the drop-off (on the road) (1s)
+
+[17:50:39] START  Enter PIN, drive to the drop-off and end the ride
+[17:55:44] PASS   Enter PIN, drive to the drop-off and end the ride (305s)
+
+[17:55:44] START  Passenger rates the driver and returns home
+[17:56:09] PASS   Passenger rates the driver and returns home (25s)
+
+[17:56:09] START  Reset the driver's location
+Location reset on 9b01005930533036340013b959553c (home 6.8813009,79.8568295).
+[17:56:22] PASS   Reset the driver's location (13s)
+
+================ Trip summary ================
+
+Step                                               Result Seconds
+----                                               ------ -------
+Check both phones are connected                    PASS         0
+Restart both apps                                  PASS         3
+Record the driver's real position                  PASS        10
+Place the driver at Majestic City, Bambalapitiya   PASS        10
+Passenger books the ride                           PASS        82
+Driver accepts the ride                            PASS        13
+Start driving to the pickup (on the road)          PASS         1
+Read the ride PIN from the passenger phone         PASS        79
+Driver reaches the pickup and opens the PIN screen PASS         4
+Start driving to the drop-off (on the road)        PASS         1
+Enter PIN, drive to the drop-off and end the ride  PASS       305
+Passenger rates the driver and returns home        PASS        25
+Reset the driver's location                        PASS        13
+RESULT: PASSED
+Logs: C:\Users\KasuniPiyumanthi\Desktop\Automation_Test\logs\2026-10-26_17-47-07
+**********************
+Windows PowerShell transcript end
+End time: 20261026175622
+**********************

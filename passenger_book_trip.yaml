@@ -4,6 +4,17 @@ appId: com.miwayz.customer_app.qa
 # Step 1: Launch passenger app
 - launchApp
 
+# Step 1a: Skip a leftover "Rate your driver" screen from a previous trip
+- extendedWaitUntil:
+    visible: ".*(Where to\\?|Rate your driver).*"
+    timeout: 15000
+- runFlow:
+    when:
+      visible: ".*Rate your driver.*"
+    commands:
+      - tapOn: "Skip"
+      - waitForAnimationToEnd
+
 # Step 2: Wait for home screen
 - extendedWaitUntil:
     visible: "Where to?"
@@ -17,19 +28,33 @@ appId: com.miwayz.customer_app.qa
     visible: "Plan Your ride"
     timeout: 10000
 
+# Step 4a: Set the pickup to Miwayz Lanka (Pvt) Ltd
+- tapOn: "Current Location"
+- waitForAnimationToEnd
+# The field clears "Current Location" after the first keystroke and drops
+# that character, so type once, clear it, and type again.
+- inputText: "Miwayz Lanka"
+- eraseText: 30
+- inputText: "Miwayz Lanka"
+- extendedWaitUntil:
+    visible: ".*Miwayz Lanka.*Castle Lane.*"
+    timeout: 15000
+- tapOn: ".*Miwayz Lanka.*Castle Lane.*"
+- waitForAnimationToEnd
+
 # Step 5: Tap destination field
 - tapOn: "Where are you going?"
 
-# Step 6: Enter destination (pickup stays as the fetched current location)
-- inputText: "Borella Junction"
+# Step 6: Enter destination
+- inputText: "Pettah"
 
 # Step 7: Wait for suggestions
 - extendedWaitUntil:
-    visible: ".*Dr. NM Perera Mawatha.*"
-    timeout: 10000
+    visible: "Pettah CTB bus stand"
+    timeout: 15000
 
 # Step 8: Select destination
-- tapOn: ".*Dr. NM Perera Mawatha.*"
+- tapOn: "Pettah CTB bus stand"
 
 # Step 9: Wait for ride selection screen
 - extendedWaitUntil:

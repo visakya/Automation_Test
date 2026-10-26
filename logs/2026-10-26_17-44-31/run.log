@@ -1,0 +1,80 @@
+﻿**********************
+Windows PowerShell transcript start
+Start time: 20261026174431
+Username: AzureAD\KasuniPiyumanthi
+RunAs User: AzureAD\KasuniPiyumanthi
+Configuration Name: 
+Machine: HP (Microsoft Windows NT 10.0.26200.0)
+Host Application: powershell -NoProfile -ExecutionPolicy Bypass -File C:\Users\KasuniPiyumanthi\Desktop\Automation_Test\run-trip-flow.ps1
+Process ID: 22896
+PSVersion: 5.1.26100.9711
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.26100.9711
+BuildVersion: 10.0.26100.9711
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+
+[17:44:31] START  Check both phones are connected
+           driver 9b01005930533036340013b959553c, passenger R9RYA03Y3WP
+[17:44:31] PASS   Check both phones are connected (0s)
+
+[17:44:31] START  Restart both apps
+adb.exe : args: [-p, com.miwayz.driversapp.qa, 1]
+At C:\Users\KasuniPiyumanthi\Desktop\Automation_Test\mock-location.ps1:10 char:5
++     & adb.exe @args 2>$null
++     ~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (args: [-p, com.miwayz.driversapp.qa, 1]:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ arg: "-p"
+ arg: "com.miwayz.driversapp.qa"
+ arg: "1"
+data="com.miwayz.driversapp.qa"
+adb.exe : args: [-p, com.miwayz.customer_app.qa, 1]
+At C:\Users\KasuniPiyumanthi\Desktop\Automation_Test\mock-location.ps1:10 char:5
++     & adb.exe @args 2>$null
++     ~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (args: [-p, com....omer_app.qa, 1]:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ arg: "-p"
+ arg: "com.miwayz.customer_app.qa"
+ arg: "1"
+data="com.miwayz.customer_app.qa"
+[17:44:35] PASS   Restart both apps (4s)
+
+[17:44:35] START  Record the driver's real position
+           home position 6.8813009,79.8568280
+[17:44:45] PASS   Record the driver's real position (10s)
+
+[17:44:45] START  Place the driver at Majestic City, Bambalapitiya
+           driver app reports 6.8939786,79.8546803
+[17:44:55] PASS   Place the driver at Majestic City, Bambalapitiya (10s)
+
+[17:45:05] START  Passenger books the ride
+PS>TerminatingError(): "Passenger booking flow failed (Maestro exit code 1); see C:\Users\KasuniPiyumanthi\Desktop\Automation_Test\logs\2026-10-26_17-44-31"
+>> TerminatingError(): "Passenger booking flow failed (Maestro exit code 1); see C:\Users\KasuniPiyumanthi\Desktop\Automation_Test\logs\2026-10-26_17-44-31"
+[17:46:00] FAIL   Passenger books the ride (55s): Passenger booking flow failed (Maestro exit code 1); see C:\Users\KasuniPiyumanthi\Desktop\Automation_Test\logs\2026-10-26_17-44-31
+PS>TerminatingError(): "Passenger booking flow failed (Maestro exit code 1); see C:\Users\KasuniPiyumanthi\Desktop\Automation_Test\logs\2026-10-26_17-44-31"
+
+[17:46:00] START  Reset the driver's location
+Location reset on 9b01005930533036340013b959553c (home 6.8813009,79.8568280).
+[17:46:43] PASS   Reset the driver's location (43s)
+
+================ Trip summary ================
+
+Step                                             Result Seconds
+----                                             ------ -------
+Check both phones are connected                  PASS         0
+Restart both apps                                PASS         4
+Record the driver's real position                PASS        10
+Place the driver at Majestic City, Bambalapitiya PASS        10
+Passenger books the ride                         FAIL        55
+Reset the driver's location                      PASS        43
+RESULT: FAILED
+Logs: C:\Users\KasuniPiyumanthi\Desktop\Automation_Test\logs\2026-10-26_17-44-31
+**********************
+Windows PowerShell transcript end
+End time: 20261026174643
+**********************
