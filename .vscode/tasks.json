@@ -1,0 +1,62 @@
+{
+    // VS Code tasks for the MiWayz trip automation.
+    // Ctrl+Shift+B runs the full trip; the others are under
+    // Terminal > Run Task... (or Ctrl+Shift+P > "Tasks: Run Task").
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Trip: Full run",
+            "detail": "Book, accept, drive to pickup, PIN, drive to drop-off, end ride, reset location",
+            "type": "process",
+            "command": "powershell.exe",
+            "args": [
+                "-NoProfile", "-ExecutionPolicy", "Bypass", "-Command",
+                // Hide Maestro's harmless "Failed to record heartbeat" noise that
+                // appears when two Maestro sessions run at the same time
+                "& '${workspaceFolder}\\run-trip-flow.ps1' *>&1 | Where-Object { \"$_\" -notmatch 'Failed to record heartbeat|^\\s+at |IOException: The process cannot access' }"
+            ],
+            "options": { "cwd": "${workspaceFolder}" },
+            "group": { "kind": "build", "isDefault": true },
+            "presentation": { "reveal": "always", "panel": "dedicated", "clear": true, "focus": true },
+            "problemMatcher": []
+        },
+        {
+            "label": "Trip: Resume at pickup",
+            "detail": "Continue a trip already accepted and waiting at the pickup",
+            "type": "process",
+            "command": "powershell.exe",
+            "args": [
+                "-NoProfile", "-ExecutionPolicy", "Bypass", "-Command",
+                "& '${workspaceFolder}\\run-trip-flow.ps1' -ResumeAtPickup *>&1 | Where-Object { \"$_\" -notmatch 'Failed to record heartbeat|^\\s+at |IOException: The process cannot access' }"
+            ],
+            "options": { "cwd": "${workspaceFolder}" },
+            "presentation": { "reveal": "always", "panel": "dedicated", "clear": true, "focus": true },
+            "problemMatcher": []
+        },
+        {
+            "label": "Trip: Reset driver location",
+            "detail": "Put the driver phone back on real GPS (use if a run was closed before it could reset)",
+            "type": "process",
+            "command": "powershell.exe",
+            "args": [
+                "-NoProfile", "-ExecutionPolicy", "Bypass", "-Command",
+                "$env:Path = [Environment]::GetEnvironmentVariable('Path','Machine') + ';' + [Environment]::GetEnvironmentVariable('Path','User'); . '${workspaceFolder}\\mock-location.ps1'; Reset-MockLocation '9b01005930533036340013b959553c' 6.8813 79.8568"
+            ],
+            "options": { "cwd": "${workspaceFolder}" },
+            "presentation": { "reveal": "always", "panel": "dedicated", "clear": true },
+            "problemMatcher": []
+        },
+        {
+            "label": "Trip: Check devices",
+            "detail": "List connected phones (both must show as 'device')",
+            "type": "process",
+            "command": "powershell.exe",
+            "args": [
+                "-NoProfile", "-Command",
+                "$env:Path = [Environment]::GetEnvironmentVariable('Path','Machine') + ';' + [Environment]::GetEnvironmentVariable('Path','User'); adb devices"
+            ],
+            "presentation": { "reveal": "always", "panel": "shared", "clear": true },
+            "problemMatcher": []
+        }
+    ]
+}

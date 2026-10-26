@@ -1,0 +1,33 @@
+appId: com.miwayz.customer_app.qa
+
+---
+# Passenger after the driver ends the ride: rate the driver (5 stars is
+# pre-selected) or skip, then make sure the app is back on the home screen.
+
+- extendedWaitUntil:
+    visible: ".*(Trip Completed|Rate your driver).*"
+    timeout: 120000
+- waitForAnimationToEnd
+
+# Submit sits at the bottom edge, so bring it fully into view first
+- scrollUntilVisible:
+    element: "Submit"
+    direction: DOWN
+    timeout: 10000
+    optional: true
+- tapOn:
+    text: "Submit"
+    optional: true
+- waitForAnimationToEnd
+
+# If the rating could not be submitted, skip it instead
+- runFlow:
+    when:
+      visible: "Skip"
+    commands:
+      - tapOn: "Skip"
+      - waitForAnimationToEnd
+
+- extendedWaitUntil:
+    visible: "Where to?"
+    timeout: 30000

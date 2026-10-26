@@ -1,0 +1,20 @@
+appId: com.miwayz.driversapp.qa
+
+---
+- launchApp
+- waitForAnimationToEnd
+
+- runFlow:
+    when:
+      visible: "Go Online"
+    commands:
+      - tapOn: "Go Online"
+      - waitForAnimationToEnd
+
+- extendedWaitUntil:
+    visible: "Accept Ride"
+    timeout: 180000
+- tapOn: "Accept Ride"
+- waitForAnimationToEnd
+
+- runFlow: driver_start_trip.yaml

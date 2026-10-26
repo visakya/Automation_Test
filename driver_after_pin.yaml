@@ -1,0 +1,17 @@
+appId: com.miwayz.driversapp.qa
+
+---
+# Fail fast if the runner did not pass the PIN with -e RIDE_START_PIN=1234;
+# otherwise Maestro types the literal text "undefined".
+- assertTrue: ${typeof RIDE_START_PIN !== 'undefined' && String(RIDE_START_PIN).length == 4}
+- extendedWaitUntil:
+    visible: "Ride Start PIN"
+    timeout: 30000
+- inputText: "${RIDE_START_PIN}"
+- waitForAnimationToEnd
+
+- extendedWaitUntil:
+    visible: ".*(In Trip|Dropping off).*"
+    timeout: 30000
+
+- runFlow: driver_end_trip.yaml

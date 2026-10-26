@@ -1,0 +1,18 @@
+appId: com.miwayz.driversapp.qa
+
+---
+# Driver at the pickup: start the trip and wait for the PIN screen.
+# Run on its own to resume a trip that is waiting at the pickup.
+# The driver drives to the pickup first, so allow time for the journey.
+- extendedWaitUntil:
+    visible: "Start Trip"
+    timeout: 1800000
+- swipe:
+    start: 15%, 90%
+    end: 85%, 90%
+    duration: 500
+- waitForAnimationToEnd
+
+- extendedWaitUntil:
+    visible: "Ride Start PIN"
+    timeout: 120000

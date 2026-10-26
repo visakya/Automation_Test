@@ -1,0 +1,100 @@
+﻿**********************
+Windows PowerShell transcript start
+Start time: 20261026172645
+Username: AzureAD\KasuniPiyumanthi
+RunAs User: AzureAD\KasuniPiyumanthi
+Configuration Name: 
+Machine: HP (Microsoft Windows NT 10.0.26200.0)
+Host Application: powershell -NoProfile -ExecutionPolicy Bypass -File C:\Users\KasuniPiyumanthi\Desktop\Automation_Test\run-trip-flow.ps1
+Process ID: 12436
+PSVersion: 5.1.26100.9711
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.26100.9711
+BuildVersion: 10.0.26100.9711
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+
+[17:26:45] START  Check both phones are connected
+           driver 9b01005930533036340013b959553c, passenger R9RYA03Y3WP
+[17:26:45] PASS   Check both phones are connected (0s)
+
+[17:26:45] START  Restart both apps
+adb.exe : args: [-p, com.miwayz.driversapp.qa, 1]
+At C:\Users\KasuniPiyumanthi\Desktop\Automation_Test\mock-location.ps1:10 char:5
++     & adb.exe @args 2>$null
++     ~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (args: [-p, com.miwayz.driversapp.qa, 1]:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ arg: "-p"
+ arg: "com.miwayz.driversapp.qa"
+ arg: "1"
+data="com.miwayz.driversapp.qa"
+adb.exe : args: [-p, com.miwayz.customer_app.qa, 1]
+At C:\Users\KasuniPiyumanthi\Desktop\Automation_Test\mock-location.ps1:10 char:5
++     & adb.exe @args 2>$null
++     ~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (args: [-p, com....omer_app.qa, 1]:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ arg: "-p"
+ arg: "com.miwayz.customer_app.qa"
+ arg: "1"
+data="com.miwayz.customer_app.qa"
+[17:26:47] PASS   Restart both apps (3s)
+
+[17:26:47] START  Record the driver's real position
+           home position 6.8813089,79.8568285
+[17:26:57] PASS   Record the driver's real position (10s)
+
+[17:27:07] START  Passenger books the ride
+[17:28:07] PASS   Passenger books the ride (60s)
+
+[17:28:07] START  Driver accepts the ride
+           pickup 6.8815251,79.8567592, drop-off 6.9139525,79.8784810
+[17:28:10] PASS   Driver accepts the ride (3s)
+
+[17:28:10] START  Start driving to the pickup (on the road)
+Road route: 0 m, 2 points
+[17:28:11] PASS   Start driving to the pickup (on the road) (1s)
+
+[17:28:11] START  Read the ride PIN from the passenger phone
+           PIN 1117
+[17:28:17] PASS   Read the ride PIN from the passenger phone (6s)
+
+[17:28:17] START  Driver reaches the pickup and opens the PIN screen
+[17:28:17] PASS   Driver reaches the pickup and opens the PIN screen (0s)
+
+[17:28:17] START  Start driving to the drop-off (on the road)
+Road route: 5815 m, 210 points
+[17:28:18] PASS   Start driving to the drop-off (on the road) (0s)
+
+[17:28:18] START  Enter PIN, drive to the drop-off and end the ride
+[17:32:15] PASS   Enter PIN, drive to the drop-off and end the ride (237s)
+
+[17:32:15] START  Reset the driver's location
+Location reset on 9b01005930533036340013b959553c (home 6.8813089,79.8568285).
+[17:32:27] PASS   Reset the driver's location (13s)
+
+================ Trip summary ================
+
+Step                                               Result Seconds
+----                                               ------ -------
+Check both phones are connected                    PASS         0
+Restart both apps                                  PASS         3
+Record the driver's real position                  PASS        10
+Passenger books the ride                           PASS        60
+Driver accepts the ride                            PASS         3
+Start driving to the pickup (on the road)          PASS         1
+Read the ride PIN from the passenger phone         PASS         6
+Driver reaches the pickup and opens the PIN screen PASS         0
+Start driving to the drop-off (on the road)        PASS         0
+Enter PIN, drive to the drop-off and end the ride  PASS       237
+Reset the driver's location                        PASS        13
+RESULT: PASSED
+Logs: C:\Users\KasuniPiyumanthi\Desktop\Automation_Test\logs\2026-10-26_17-26-45
+**********************
+Windows PowerShell transcript end
+End time: 20261026173227
+**********************

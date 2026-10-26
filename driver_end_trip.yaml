@@ -1,0 +1,37 @@
+appId: com.miwayz.driversapp.qa
+
+---
+# Driver trip completion: run on its own to resume a trip that is already
+# in progress. "Dropping off" is shown for the whole trip; the end-ride
+# slider only appears once the driver reaches the drop-off, so wait on that.
+- extendedWaitUntil:
+    visible: "Slide to End ride"
+    timeout: 1800000
+- swipe:
+    start: 15%, 90%
+    end: 85%, 90%
+    duration: 500
+- waitForAnimationToEnd
+
+# The app may go straight back to "You're Online" after ending the ride,
+# so cash collection and rating are handled only when they are shown.
+- extendedWaitUntil:
+    visible: ".*(Collect Cash|Rate Rider|You.re Online).*"
+    timeout: 60000
+
+- runFlow:
+    when:
+      visible: "Collect Cash"
+    commands:
+      - swipe:
+          start: 15%, 90%
+          end: 85%, 90%
+          duration: 500
+      - waitForAnimationToEnd
+
+- runFlow:
+    when:
+      visible: "Rate Rider"
+    commands:
+      - tapOn: "Rate Rider"
+      - waitForAnimationToEnd

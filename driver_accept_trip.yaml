@@ -3,6 +3,7 @@ appId: com.miwayz.driversapp.qa
 ---
 # MiWayz Driver - Full trip flow (STARTER TEMPLATE)
 # Start this flow first so the driver is ready to receive the passenger booking.
+# The coordinator starts the passenger flow only after this request wait begins.
 # Replace app ID, test PIN, and selectors with actual QA app values.
 
 - launchApp
@@ -14,10 +15,7 @@ appId: com.miwayz.driversapp.qa
       visible: "Go Online"
     commands:
       - tapOn: "Go Online"
-- waitForAnimationToEnd
-- extendedWaitUntil:
-    visible: ".*(You're Online|Go Online).*"
-    timeout: 30000
+      - waitForAnimationToEnd
 
 # Wait for an incoming trip request
 - extendedWaitUntil:
@@ -41,11 +39,12 @@ appId: com.miwayz.driversapp.qa
     duration: 500
 - waitForAnimationToEnd
 
-# Enter the passenger's ride-start PIN from the passenger app
+# Enter the PIN read from the passenger device by the test runner.
+# Start the flow with RIDE_START_PIN set to the current passenger PIN.
 - extendedWaitUntil:
     visible: "Ride Start PIN"
     timeout: 120000
-- inputText: "1234"
+- inputText: "${RIDE_START_PIN}"
 - waitForAnimationToEnd
 
 # Verify the trip is active, then wait until the destination/drop-off state
@@ -54,14 +53,11 @@ appId: com.miwayz.driversapp.qa
 - extendedWaitUntil:
     visible: ".*(In Trip|Dropping off).*"
     timeout: 30000
-- extendedWaitUntil:
-    visible: "Dropping off"
-    timeout: 1800000
-
-# End the ride only after reaching the drop-off location
+# End the ride only after reaching the drop-off location. "Dropping off" is
+# shown for the whole trip, so wait for the end-ride slider instead.
 - extendedWaitUntil:
     visible: "Slide to End ride"
-    timeout: 30000
+    timeout: 1800000
 - swipe:
     start: 15%, 90%
     end: 85%, 90%

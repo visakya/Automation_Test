@@ -20,16 +20,16 @@ appId: com.miwayz.customer_app.qa
 # Step 5: Tap destination field
 - tapOn: "Where are you going?"
 
-# Step 6: Enter destination
-- inputText: "Pettah"
+# Step 6: Enter destination (pickup stays as the fetched current location)
+- inputText: "Borella Junction"
 
 # Step 7: Wait for suggestions
 - extendedWaitUntil:
-    visible: "Pettah CTB bus stand"
+    visible: ".*Dr. NM Perera Mawatha.*"
     timeout: 10000
 
 # Step 8: Select destination
-- tapOn: "Pettah CTB bus stand"
+- tapOn: ".*Dr. NM Perera Mawatha.*"
 
 # Step 9: Wait for ride selection screen
 - extendedWaitUntil:
@@ -50,7 +50,8 @@ appId: com.miwayz.customer_app.qa
 # Step 13: Confirm pickup
 - tapOn: "Confirm pick-up"
 
-# Step 14: Verify driver search
-- extendedWaitUntil:
-    visible: ".*Searching.*"
-    timeout: 20000
+# Step 14: Allow the request state to update.
+# The driver may accept immediately, so the passenger can leave Searching
+# before a text assertion is evaluated. The coordinator confirms the booking
+# by reading the ride-start PIN from this device.
+- waitForAnimationToEnd
